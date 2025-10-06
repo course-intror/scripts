@@ -1,5 +1,5 @@
 #' ---
-#' title: visualizacao de dados
+#' title: aula 04 - introR: introdução a linguagem R - visualizacao
 #' author: mauricio vancine
 #' date: 2022-11-11
 #' ---
@@ -10,6 +10,10 @@ library(tidyverse)
 library(palmerpenguins)
 library(datasauRus)
 library(ggpubr)
+library(ggdist)
+library(ggtext)
+library(colorspace)
+library(ragg)
 library(GGally)
 library(psych)
 library(cowplot)
@@ -404,6 +408,40 @@ ggbarplot(penguins_count,
           ylab = "Frequência absoluta",
           legend = "none",
           orientation = "horiz")
+
+# dynamit
+penguins_flipper_length_mn_sd <- penguins %>%
+  dplyr::group_by(species) %>% 
+  dplyr::summarise(mean = mean(flipper_length_mm, na.rm = TRUE),
+                   sd = sd(flipper_length_mm, na.rm = TRUE))
+penguins_flipper_length_mn_sd
+
+ggplot(data = penguins, 
+       aes(x = species, y = flipper_length_mm, fill = species)) +
+  stat_summary(fun = mean,
+               geom = "col",
+               color = "black",
+               show.legend = FALSE) +
+  stat_summary(fun.data = mean_se,
+               geom = "errorbar",
+               width = 0.15,
+               linewidth = 0.8) +
+  scale_fill_manual(values = c("darkorange", "purple", "cyan4")) +
+  theme_bw(base_size = 15) +
+  labs(x = "Species", y = "Flipper length (mm)")
+
+ggbarplot(penguins,
+          x = "species",
+          y = "flipper_length_mm",
+          fill = "species",
+          color = "gray30",              
+          palette = c("darkorange", "purple", "cyan4"),
+          add = "mean_se",
+          add.params = list(size = 1),
+          main = "Tamanho médio da barbatana por espécie (desvio padrão)",
+          xlab = "Espécies",
+          ylab = "Frequência absoluta",
+          legend = "none")
 
 # 9. grafico de caixas ----------------------------------------------------
 
