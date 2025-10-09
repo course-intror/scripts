@@ -1,8 +1,8 @@
-#' ---
+#' ----
 #' title: aula 02 - introR: introdução a linguagem R - Base R
 #' author: mauricio vancine
 #' date: 2025-10-15
-#' ---
+#' ----
 
 # topics ------------------------------------------------------------------
 
@@ -23,42 +23,21 @@
 logical <- TRUE
 logical
 
-# mode
-mode(logical)
-
 ### numeric ----
 numeric <- 3.14
 numeric
-
-# mode
-mode(numeric)
-
-# type
-typeof(numeric)
 
 ### integer ----
 integer <- 2L
 integer
 
-# mode
-mode(integer)
-
-# type
-typeof(integer)
-
 ### complex ----
 complex <- 3 + 2i
 complex
 
-# mode
-mode(complex)
-
 ### character ----
 character <- "a"
 character
-
-# mode
-mode(character)
 
 ## verificar o modo dos objetos
 # is.numeric()
@@ -86,7 +65,8 @@ c("amostra1", "amostra2", "amostra3")
 seq(1, 10, 2)
 
 # repetir
-rep(42, 5)
+rep(c(23, 42), times = 2)
+rep(c(23, 42), each = 2)
 
 # combinar
 paste("amostra", 1:3)
@@ -159,7 +139,7 @@ df <- data.frame(
   vegetacao = c("flo", "cer", "past"))
 df
 
-# 2. manejo de dados unidimensionais -------------------------------------
+# manejo de dados unidimensionais -------------------------------------
 
 # vetor e fator
 # indexacao []
@@ -296,7 +276,7 @@ names(li)
 names(li) <- paste0("elemento0", 1:3)
 li
 
-# 3. manejo de dados bidimensionais --------------------------------------
+# manejo de dados bidimensionais --------------------------------------
 
 # matriz - indexacao []
 ma <- matrix(1:12, 4, 3)
@@ -384,7 +364,7 @@ df[df$flo == "floresta", ]
 # rowMeans(): calcula a média das linhas (horizontal)
 # colMeans(): calcula a média das colunas (vertical)
 
-# 4 valores faltantes e especiais --------------------------------------
+# valores faltantes e especiais --------------------------------------
 
 # 1 na - not available
 foo_na <- NA
@@ -437,7 +417,7 @@ is.nan(ve)
 nulo <- NULL
 nulo
 
-# 5. diretorio de trabalho -----------------------------------------------
+# diretorio de trabalho -----------------------------------------------
 
 # definir o diretorio de trabalho
 setwd("/home/mude/data/github/course-intror/data") # mudem
@@ -448,7 +428,8 @@ getwd()
 # listar os arquivos
 dir()
 
-# 6. importar dados ------------------------------------------------------
+#  importar dados ------------------------------------------------------
+
 # ler uma planilha eletronica (.csv)
 read.csv("ATLANTIC_AMPHIBIANS_sites.csv", encoding = "latin1")
 

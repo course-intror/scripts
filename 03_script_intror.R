@@ -1,8 +1,8 @@
-#' ---
+#' ----
 #' title: aula 03 - introR: introdução a linguagem R - tidyverse
 #' author: mauricio vancine
-#' date: 2021-10-11
-#' ---
+#' date: 2025-10-15
+#' ----
 
 # packages ----------------------------------------------------------------
 
@@ -15,20 +15,19 @@ library(parallel)
 
 # topics ------------------------------------------------------------------
 
-# 1. contextualizacao
-# 2. tidyverse
-# 3. here
-# 4. readr, readxl e writexl
-# 5. tibble
-# 6. magrittr (pipe - %>%)
-# 7. tidyr
-# 8. dplyr
-# 9. stringr
-# 10. forcats
-# 11. lubridate
-# 12. purrr
+# contextualizacao
+# tidyverse
+# readr, readxl e writexl
+# tibble
+# magrittr (pipe - %>%)
+# tidyr
+# dplyr
+# stringr
+# forcats
+# lubridate
+# purrr
 
-# 2. tidyverse -----------------------------------------------------------
+# tidyverse -----------------------------------------------------------
 # instalar pacote
 # install.packages("tidyverse")
 
@@ -38,34 +37,26 @@ library(tidyverse)
 # list all packages in the tidyverse 
 tidyverse::tidyverse_packages(include_self = TRUE)
 
-# 3. here -----------------------------------------------------------------
-# instalar
-# install.packages("here")
+# 5. diretorio de trabalho -----------------------------------------------
 
-# carregar
-library(here)
+# definir o diretorio de trabalho
+setwd("/home/mude/data/github/course-intror/data") # mudem
 
-# conferir
-here::here()
+# verificar o diretorio
+getwd()
 
-# criar um arquivo .here
-# here::set_here("")
+# listar os arquivos
+dir()
 
-# 4. readr, readxl e writexl ----------------------------------------------
+# readr, readxl e writexl ----------------------------------------------
+
+## importar ----
 # formato .csv
-# importar sites com here
-si <- read.csv(here::here("03_dados", "tabelas", "ATLANTIC_AMPHIBIANS_sites.csv"))
-si
-
-object.size(si)
-
-# importar sites sem here
-si <- readr::read_csv("./03_dados/tabelas/ATLANTIC_AMPHIBIANS_sites.csv")
+si <- readr::read_csv("ATLANTIC_AMPHIBIANS_sites.csv")
 si
 
 # formato .txt
-# importar sites
-si <- readr::read_tsv(here::here("03_dados", "tabelas", "ATLANTIC_AMPHIBIANS_sites.txt"))
+si <- readr::read_tsv("ATLANTIC_AMPHIBIANS_sites.txt")
 si
 
 # importar .xlsx
@@ -77,51 +68,32 @@ library("readxl")
 library("writexl")
 
 # importar sites
-si <- readxl::read_xlsx(here::here("03_dados", "tabelas", "ATLANTIC_AMPHIBIANS_sites.xlsx"), 
-                        sheet = 1)
+si <- readxl::read_xlsx("ATLANTIC_AMPHIBIANS_sites.xlsx", sheet = 1)
 si
 
-# importar sites
-si <- readr::read_csv(here::here("03_dados", "tabelas", "ATLANTIC_AMPHIBIANS_sites.csv"))
-si
+## exportar ----
+# exportar csv
+readr::write_csv(si, "ATLANTIC_AMPHIBIANS_sites_exportado.csv")
 
-# importar especies
-sp <- readr::read_csv(here::here("03_dados", "tabelas", "ATLANTIC_AMPHIBIANS_species.csv"))
-sp
+# exportar txt
+readr::write_tsv(si, "ATLANTIC_AMPHIBIANS_sites_exportado.txt")
 
-# 5. tibble --------------------------------------------------------------
+# exportar excel
+writexl::write_xlsx(si, "ATLANTIC_AMPHIBIANS_sites_exportado.xlsx")
+
+
+# tibble --------------------------------------------------------------
+
+# tibble
+tb <- tibble::tibble(a = 1:10)
+tb
+
+as.data.frame(tb)
 
 # view the sites data
 tibble::glimpse(si)
 
-# view the species data
-tibble::glimpse(sp)
-
-# tibble vs data.frame
-
-# 1. nunca converte um tipo character como factor - 
-df <- data.frame(ch = c("a", "b"), nu = 1:2)
-str(df)
-
-tb <- tibble::tibble(ch = c("a", "b"), nu = 1:2)
-glimpse(tb)
-
-# 2. a indexacao com colchetes sempre retorna um tibble
-df_ch <- df[, 1]
-class(df_ch)
-
-tb_ch <- tb[, 1]
-class(tb_ch)
-
-# indexacao pelo nome devolve um vetor
-tb_ch <- tb$ch
-class(tb_ch)
-
-# 3. nao faz correspondencia parcial, retorna NULL se a coluna nao existe com o nome especificado
-df$c 
-tb$c
-
-# 6. magrittr (pipe - %>%) -----------------------------------------------
+# magrittr (pipe - %>%) -----------------------------------------------
 # sem pipe
 sqrt(sum(1:100))
 
@@ -140,15 +112,26 @@ ve
 # fixar amostragem
 set.seed(42)
 
+# sem pipe
+ve <- sqrt(sum(sample(0:60, 6)))
+ve
+
+# fixar amostragem
+set.seed(42)
+
 # com pipe
-ve <- rpois(100, 10) %>% 
-  log10() %>%
-  sort() %>% 
-  sqrt() %>% 
-  sum()
+ve <- sample(0:60, 6) %>% 
+  sum() %>%
+  sqrt() 
 ve  
 
-# -------------------------------------------------------------------------
+# exercicios --------------------------------------------------------------
+
+log10(cumsum(1:100))
+
+sum(sqrt(abs(rnorm(100))))
+
+sum(log(sample(1:10, 10000, rep = TRUE)))
 
 # palmerpenquins ----------------------------------------------------------
 
@@ -170,15 +153,15 @@ penguins_raw
 tibble::glimpse(penguins)
 tibble::glimpse(penguins_raw)
 
-# 7. tidyr ---------------------------------------------------------------
+#  tidyr ---------------------------------------------------------------
+
 # funcoes
 # 1. unite(): junta dados de múltiplas colunas em uma
 # 2. separate(): separa caracteres em múlplica colunas
-# 3. separate_rows(): separa caracteres em múlplica colunas e linhas
-# 4. drop_na(): retira linhas com NA
-# 5. replace_na(): substitui NA
-# 6. pivot_wider(): long para wide
-# 7. pivot_longer(): wide para long
+# 3. drop_na(): retira linhas com NA
+# 4. replace_na(): substitui NA
+# 5. pivot_wider(): long para wide
+# 6. pivot_longer(): wide para long
 
 # 1. unite()
 # unir colunas
@@ -198,15 +181,7 @@ penguins_raw_separar <- tidyr::separate(data = penguins_raw,
                                         remove = FALSE)
 head(penguins_raw_separar[, c("Stage", "stage", "egg_stage")])
 
-# 3. separate_rows()
-# separar colunas em linhas
-penguins_raw_separar_linhas <- tidyr::separate_rows(data = penguins_raw,
-                                                    Stage,
-                                                    sep = ", ")
-head(penguins_raw_separar_linhas[, c("studyName", "Sample Number", "Species", 
-                                     "Region", "Island", "Stage")])
-
-# 4. drop_na()
+# 3. drop_na()
 # remover linhas com na
 penguins_raw_todas_na <- tidyr::drop_na(data = penguins_raw)
 head(penguins_raw_todas_na)
@@ -216,13 +191,13 @@ penguins_raw_colunas_na <- tidyr::drop_na(data = penguins_raw,
                                           any_of("Comments"))
 head(penguins_raw_colunas_na[, "Comments"])
 
-# 5. replace_na()
+# 4. replace_na()
 # substituir nas por 0 em uma coluna
 penguins_raw_subs_na <- tidyr::replace_na(data = penguins_raw,
                                           list(Comments = "Unknown"))
 head(penguins_raw_subs_na[, "Comments"])
 
-# 6. pivot_wider()
+# 5. pivot_wider()
 # long para wide
 penguins_raw_pivot_wider <- tidyr::pivot_wider(data = penguins_raw[, c(2, 3, 13)], 
                                                names_from = Species, 
@@ -236,7 +211,7 @@ penguins_raw_pivot_wider <- tidyr::pivot_wider(data = penguins_raw[, c(2, 3, 13)
                                                values_fill = 0)
 head(penguins_raw_pivot_wider)
 
-# 7. pivot_longer()
+# 6. pivot_longer()
 # wide para long
 penguins_raw_pivot_longer <- tidyr::pivot_longer(data = penguins_raw[, c(2, 3, 10:13)], 
                                                  cols = `Culmen Length (mm)`:`Body Mass (g)`,
@@ -244,7 +219,7 @@ penguins_raw_pivot_longer <- tidyr::pivot_longer(data = penguins_raw[, c(2, 3, 1
                                                  values_to = "valores")
 head(penguins_raw_pivot_longer)
 
-# 8. dplyr ---------------------------------------------------------------
+# dplyr ---------------------------------------------------------------
 
 # funcoes
 # 1. relocate(): muda a ordem das colunas
@@ -261,6 +236,11 @@ head(penguins_raw_pivot_longer)
 # 12. summarise(): resume os dados através de funções considerando valores das colunas
 
 # 1. relocate()
+# reordenar colunas - nome
+penguins_relocate_col <- penguins %>% 
+  dplyr::relocate(sex, year, .after = island)
+head(penguins_relocate_col)
+
 # reordenar colunas - posicao
 penguins_relocate_ncol <- penguins %>% 
   dplyr::relocate(sex, year, .after = 2)
@@ -274,11 +254,6 @@ penguins_rename <- penguins %>%
                 flipper_length = flipper_length_mm,
                 body_mass = body_mass_g)
 head(penguins_rename)
-
-# renomear todas as colunas
-penguins_rename_with <- penguins %>% 
-  dplyr::rename_with(toupper)
-head(penguins_rename_with)
 
 # 3. select()
 # selecionar colunas por posicao
@@ -313,12 +288,6 @@ penguins_mutate <- penguins %>%
   dplyr::mutate(body_mass_kg = body_mass_g/1e3, .before = sex)
 head(penguins_mutate)
 
-## modificar varias colunas
-penguins_mutate_across <- penguins %>% 
-  
-  dplyr::mutate(across(where(is.factor), as.character))
-head(penguins_mutate_across)
-
 # 6. arrange()
 # reordenar os valores por ordem crescente
 penguins_arrange <- penguins %>% 
@@ -334,11 +303,6 @@ head(penguins_arrange_desc)
 penguins_arrange_desc_m <- penguins %>% 
   dplyr::arrange(-body_mass_g)
 head(penguins_arrange_desc_m)
-
-# reordenar os valores por ordem crescente de varias colunas
-penguins_arrange_across <- penguins %>% 
-  dplyr::arrange(across(where(is.numeric)))
-head(penguins_arrange_across)
 
 # 7. filter()
 # filtrar linhas por valores de uma coluna
@@ -356,21 +320,6 @@ penguins_filter_in <- penguins %>%
   dplyr::filter(species %in% c("Adelie", "Gentoo"),
                 sex == "female")
 head(penguins_filter_in)
-
-# filtrar linhas por nas
-penguins_filter_na <- penguins %>% 
-  dplyr::filter(!is.na(sex) == TRUE)
-head(penguins_filter_na)
-
-# filtrar linhas por valores em um intervalo
-penguins_filter_between <- penguins %>% 
-  dplyr::filter(between(body_mass_g, 3000, 4000))
-head(penguins_filter_between)
-
-# filtrar linhas por valores de varias colunas
-penguins_filter_if <- penguins %>% 
-  dplyr::filter(if_all(where(is.integer), ~ . > 200))
-head(penguins_filter_if)
 
 # 8. slice()
 # selecionar linhas por intervalos
@@ -404,11 +353,6 @@ penguins_distinct_keep_all <- penguins %>%
   dplyr::distinct(body_mass_g, .keep_all = TRUE)
 head(penguins_distinct_keep_all)
 
-# retirar linhas com valores duplicados para varias colunas
-penguins_distinct_keep_all_across <- penguins %>% 
-  dplyr::distinct(across(where(is.integer)), .keep_all = TRUE)
-head(penguins_distinct_keep_all_across)
-
 # 10. count()
 # contagens de valores para uma coluna
 penguins_count <- penguins %>% 
@@ -420,33 +364,21 @@ penguins_count_two <- penguins %>%
   dplyr::count(species, island)
 penguins_count_two
 
+# contagens de valores para mais de uma coluna
+penguins_count_two_sort <- penguins %>% 
+  dplyr::count(species, island, sort = TRUE)
+penguins_count_two_sort
+
 # 11. group_by()
 # agrupamento
 penguins_group_by <- penguins %>% 
   dplyr::group_by(species)
 head(penguins_group_by)
 
-# agrupamento de várias colunas
-penguins_group_by_across <- penguins %>% 
-  dplyr::group_by(across(where(is.factor)))
-head(penguins_group_by_across)
-
 # 12. summarise()
 # resumo
 penguins_summarise <- penguins %>% 
   dplyr::group_by(species) %>% 
-  dplyr::summarize(body_mass_g_mean = mean(body_mass_g, na.rm = TRUE),
-                   body_mass_g_sd = sd(body_mass_g, na.rm = TRUE))
-penguins_summarise
-
-# resumo para várias colunas
-penguins_summarise_across <- penguins %>% 
-  dplyr::group_by(species) %>% 
-  dplyr::summarize(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
-penguins_summarise_across
-
-penguins_summarise <- penguins %>% 
-  dplyr::group_by(species, island) %>% 
   dplyr::summarize(body_mass_g_mean = mean(body_mass_g, na.rm = TRUE),
                    body_mass_g_sd = sd(body_mass_g, na.rm = TRUE))
 penguins_summarise
@@ -464,7 +396,7 @@ head(penguins_bind_rows)
 penguins_bind_cols <- dplyr::bind_cols(penguins_01, penguins_02, .name_repair = "unique")
 head(penguins_bind_cols)
 
-# 9. stringr -------------------------------------------------------------
+# stringr -------------------------------------------------------------
 
 # comprimento
 stringr::str_length(string = "penguins")
@@ -475,7 +407,7 @@ stringr::str_replace(string = "penguins", pattern = "i", replacement = "y")
 # separar
 stringr::str_split(string = "p-e-n-g-u-i-n-s", pattern = "-", simplify = TRUE)
 
-  # extrair pela posicao
+# extrair pela posicao
 stringr::str_sub(string = "penguins", end = 3)
 
 # extrair por padrao
@@ -525,7 +457,7 @@ penguins_stringr_valores <- penguins %>%
 penguins_stringr_nomes <- penguins %>% 
   dplyr::rename_with(stringr::str_to_title)
 
-# 10. forcats -------------------------------------------------------------
+# forcats -------------------------------------------------------------
 
 # converter dados de string para fator
 forcats::as_factor(penguins_raw$Species) %>% head()
@@ -556,7 +488,7 @@ penguins_raw_multi_factor <- penguins_raw %>%
   dplyr::mutate(across(where(is.character), forcats::as_factor))
 penguins_raw_multi_factor
 
-# 11. lubridate ----------------------------------------------------------
+# lubridate ----------------------------------------------------------
 
 # carregar
 library(lubridate)
@@ -623,59 +555,7 @@ lubridate::hour(data) <- 13
 # incluir varios valores
 update(data, year = 2020, month = 1, mday = 1, hour = 1)
 
-# duracoes
-# subtracao de datas
-tempo_estudando_r <- lubridate::today() - lubridate::dmy("30-11-2011")
-
-# conversao para duracao
-tempo_estudando_r_dur <- lubridate::as.duration(tempo_estudando_r)
-tempo_estudando_r_dur
-
-# criando duracoes
-lubridate::duration(90, "seconds")
-lubridate::duration(1.5, "minutes")
-lubridate::duration(1, "days")
-
-# transformacao da duracao
-lubridate::dseconds(100)
-lubridate::dminutes(100)
-lubridate::dhours(100)
-lubridate::ddays(100)
-lubridate::dweeks(100)
-lubridate::dyears(100)
-
-# somando duracoes a datas
-lubridate::today() + lubridate::ddays(1)
-
-# subtraindo duracoes de datas
-lubridate::today() - lubridate::dyears(1)
-
-# multiplicando duracoes
-2 * dyears(2)
-
-# periodos
-# criando periodos
-period(c(90, 5), c("second", "minute"))
-period(c(3, 1, 2, 13, 1), c("second", "minute", "hour", "day", "week"))
-
-# transformacao de periodos
-lubridate::seconds(100)
-lubridate::minutes(100)
-lubridate::hours(100)
-lubridate::days(100)
-lubridate::weeks(100)
-lubridate::years(100)
-
-# somando datas
-lubridate::today() + lubridate::weeks(10)
-
-# subtraindo datas
-lubridate::today() - lubridate::weeks(10)
-
-# criando datas recorrentes
-lubridate::today() + lubridate::weeks(0:10)
-
-# 12. purrr --------------------------------------------------------------
+# purrr --------------------------------------------------------------
 
 # loop for
 for(i in 1:10){

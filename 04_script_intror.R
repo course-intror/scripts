@@ -1,8 +1,8 @@
-#' ---
+#' ----
 #' title: aula 04 - introR: introdução a linguagem R - visualizacao
 #' author: mauricio vancine
-#' date: 2022-11-11
-#' ---
+#' date: 2025-10-15
+#' ----
 
 # pacotes -----------------------------------------------------------------
 
@@ -21,26 +21,26 @@ library(patchwork)
 library(gganimate)
 library(plotly)
 library(htmlwidgets)
+library(shiny)
 library(esquisse)
 
 # topicos -----------------------------------------------------------------
 
-# 1. pacotes para graficos 
-# 2. gramatica dos graficos
-# 3. principais livros e sites 
-# 4. principais tipos de graficos 
-# 5. histograma e densidade
-# 6. grafico de setores
-# 7. grafico de barras
-# 8. grafico de caixas
-# 9. grafico de dispersao
-# 10. grafico pareado
-# 11. combinando graficos
-# 12. graficos animados
-# 13. graficos interativos
-# 14. graficos usando uma interface
+# pacotes para graficos 
+# gramatica dos graficos
+# principais tipos de graficos 
+# histograma e densidade
+# grafico de setores
+# grafico de barras
+# grafico de caixas
+# grafico de dispersao
+# grafico pareado
+# combinando graficos
+# graficos animados
+# graficos interativos
+# graficos usando uma interface
 
-# 1. pacotes para graficos  ---------------------------------------------
+# pacotes para graficos  ---------------------------------------------
 
 # graphics
 plot(flipper_length_mm ~ body_mass_g, data = penguins)
@@ -51,11 +51,17 @@ ggplot(data = penguins) + aes(x = body_mass_g, y = flipper_length_mm) + geom_poi
 # ggpubr
 ggscatter(penguins, x = "body_mass_g", y = "flipper_length_mm")
 
-# 5. histograma e densidade -----------------------------------------------
+# paleta de cores ---------------------------------------------------------
+
+# cols4all
+cols4all::c4a_gui() # lembre=se apertar esc para continuar
+
+# histograma e densidade -----------------------------------------------
 
 # visualizar os dados
 penguins
 
+## base r ----
 hist(penguins$flipper_length_mm)
 
 hist(penguins$flipper_length_mm,
@@ -121,8 +127,8 @@ polygon(density(na.omit(penguins$flipper_length_mm)),
         col = "gray50")
 
 # exportar
-# diretorio
-setwd("/home/mude/data/github/mauriciovancine/workshop-r-introduction/03_dados/")
+# definir o diretorio de trabalho
+setwd("/home/mude/data/github/course-intror/data") # mudem
 
 png("plot_densidade.png", wi = 20, he = 20, un = "cm", res = 300)
 
@@ -137,7 +143,7 @@ polygon(density(na.omit(penguins$flipper_length_mm)), col = "gray50")
 
 dev.off()
 
-# ggplot2
+## ggplot2 ----
 ggplot(data = penguins)
 
 ggplot(data = penguins, aes(x = flipper_length_mm))
@@ -232,11 +238,12 @@ ggplot_densidade <- ggplot(data = penguins,
        fill = "Espécie") +
   theme_bw(base_size = 16)
 ggplot_densidade
+
 ggsave(filename = "density_ggplot2.png", 
        plot = ggplot_densidade, wi = 20, he = 15, 
        un = "cm", dpi = 300)
 
-# ggpubr
+## ggpubr ----
 gghistogram(data = penguins, 
             x = "flipper_length_mm",
             add = "median",
@@ -267,7 +274,7 @@ ggpubr_densidade <- ggdensity(data = penguins,
 ggsave(filename = "densidade_ggpubr.png", 
        plot = ggpubr_densidade, wi = 20, he = 15, un = "cm", dpi = 300)
 
-# 7. grafico de setores ---------------------------------------------------
+# grafico de setores ---------------------------------------------------
 
 # classico
 par(mar = c(0, 1, 0, 1))
@@ -335,7 +342,7 @@ ggdonutchart(penguins_prop,
              color = "white",
              palette = c("darkorange", "purple", "cyan4"))
 
-# 8. grafico de barras ----------------------------------------------------
+# grafico de barras ----------------------------------------------------
 
 # numero de individuos coletados
 penguins_count <- penguins %>%
@@ -443,7 +450,7 @@ ggbarplot(penguins,
           ylab = "Frequência absoluta",
           legend = "none")
 
-# 9. grafico de caixas ----------------------------------------------------
+# grafico de caixas ----------------------------------------------------
 
 # graphics
 boxplot(flipper_length_mm ~ as.factor(species),
@@ -513,7 +520,7 @@ ggviolin(data = penguins,
          ylab = "Frequência absoluta",
          legend = "none")
 
-# 10. grafico de dispersao ------------------------------------------------
+# grafico de dispersao ------------------------------------------------
 
 # graphics
 par(mar = c(5, 5, 1, 1))
@@ -615,7 +622,7 @@ ggscatter(data = datasaurus_dozen,
           facet.by = "dataset")
 
 
-# 11. grafico pareado -----------------------------------------------------
+# grafico pareado -----------------------------------------------------
 
 # graphics
 penguins %>%
@@ -649,7 +656,7 @@ penguins %>%
                breaks = 10,
                ci = TRUE)
 
-# 12. combinando graficos -------------------------------------------------
+# combinando graficos -------------------------------------------------
 
 # graphics
 par(mfrow = c(1, 2))
@@ -733,7 +740,7 @@ ggplot_boxplot + ggplot_scatterplot
 # combinacao vertical
 ggplot_boxplot / ggplot_scatterplot
 
-# 13. graficos animados ---------------------------------------------------
+# graficos animados ---------------------------------------------------
 
 # gganimate - demora uns 10 segundos!
 plot_animate <- ggplot(data = penguins,
@@ -756,7 +763,7 @@ plot_animate
 gganimate::anim_save(filename = "plot_animate.gif",
                      animation = plot_animate, wi = 700, he = 500, un = "px")
 
-# 14. graficos interativos ------------------------------------------------
+# graficos interativos ------------------------------------------------
 
 # plotly
 plot_ly(data = penguins,
@@ -799,11 +806,11 @@ plot_penguins_scatter_int
 htmlwidgets::saveWidget(widget = plot_penguins_scatter_int, 
                         file = "plot_penguins_scatter_int.html")
 
-# 15. graficos usando uma interface ---------------------------------------
+# graficos usando uma interface ---------------------------------------
 
 # esquisse
-
-# iniciar
-esquisse::esquisser(na.omit(palmerpenguins::penguins))
+palmerpenguins::penguins %>% 
+  na.omit() %>% 
+  esquisse::esquisser()
 
 # end ---------------------------------------------------------------------
